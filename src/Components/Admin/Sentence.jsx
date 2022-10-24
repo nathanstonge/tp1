@@ -17,7 +17,9 @@ function Sentence(props) {
         props.addSentence(sentence)
         const prevSentence = sentence;
         setSentence({id:prevSentence.id, text:"", audio:""});
-    }
+    };
+   
+
 
     
 

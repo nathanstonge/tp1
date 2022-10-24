@@ -31,6 +31,7 @@ function SentenceAdded(props) {
       const index = sentences.findIndex((s) => s.id == sentence.id);
       sentences[index] = sentence;
       props.setSentences(sentences);
+      
     }
   };
   const handleRemoveSentence = () => {

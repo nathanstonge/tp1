@@ -18,41 +18,100 @@ import Question from "../../Components/Admin/Question";
 import { v4 } from "uuid";
 import ImageAdded from "../../Components/Admin/ImageAdded";
 import SentenceAdded from "../../Components/Admin/SentenceAdded";
+import { useDispatch } from "react-redux";
+import { addText } from "/src/redux.jsx";
 
 function TextInfos(props) {
+  const dispatch = useDispatch();
+  let _titre;
   const [images, setImages] = useState([]);
-
   const [sentences, setSentences] = useState([]);
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([
+    { id: 1, text: "", audio: "", answer: "", answerChoices: [] },
+    { id: 2, text: "", audio: "", answer: "", answerChoices: [] },
+    { id: 3, text: "", audio: "", answer: "", answerChoices: [] },
+    { id: 4, text: "", audio: "", answer: "", answerChoices: [] },
+    { id: 5, text: "", audio: "", answer: "", answerChoices: [] },
+    { id: 6, text: "", audio: "", answer: "", answerChoices: [] },
+  ]);
 
   const handleAddImage = (imageScr) => {
-    const newImage = {id:v4(), src: imageScr};
+    const newImage = { id: v4(), src: imageScr };
     setImages((prevValue) => {
       return [...prevValue, newImage];
     });
   };
   const handleRemoveImage = (id) => {
-    setImages(prevValues => {
-      return prevValues.filter(i => {
+    setImages((prevValues) => {
+      return prevValues.filter((i) => {
         return i.id != id;
       });
     });
-   
   };
 
   const handleAddSentence = (sentence) => {
-    const newSentence = {id:v4(), text: sentence.text, audio: sentence.audio};
+    const newSentence = {
+      id: v4(),
+      text: sentence.text,
+      audio: sentence.audio,
+    };
     setSentences((prevValue) => {
       return [...prevValue, newSentence];
     });
   };
   const handleRemoveSentence = (id) => {
-    setSentences(prevValues => {
-      return prevValues.filter(img => {
-        return img.id != id;
+    setSentences((prevValues) => {
+      return prevValues.filter((s) => {
+        return s.id != id;
       });
     });
-  }
+  };
+
+  const replaceQuestions = (id, question) => {
+    const questionsCopy = questions;
+    const index = questions.findIndex((q) => q.id == id);
+    questionsCopy[index] = question;
+    return questionsCopy;
+  };
+
+  const handleChangeQuestion = (question) => {
+    switch (question.id) {
+      case "1":
+        setQuestions(replaceQuestions(1, question));
+        break;
+      case "2":
+        setQuestions(replaceQuestions(2, question));
+
+        break;
+      case "3":
+        setQuestions(replaceQuestions(3, question));
+
+        break;
+      case "4":
+        setQuestions(replaceQuestions(4, question));
+
+        break;
+      case "5":
+        setQuestions(replaceQuestions(5, question));
+
+        break;
+      case "6":
+        setQuestions(replaceQuestions(6, question));
+
+        break;
+    }
+  };
+
+  const handleValidate = () => {
+    const newText = {
+      titre: _titre.value,
+      images: images,
+      phrases: sentences,
+      questions: questions
+    };
+    dispatch(addText(newText))
+  };
+  
 
   return (
     <div>
@@ -74,6 +133,7 @@ function TextInfos(props) {
                 </Col>
                 <Col xs={10} className="pt-2">
                   <Form.Control
+                  ref={input => _titre = input}
                     placeholder="Entrez le titre"
                     required
                     className="mb-2"
@@ -88,51 +148,44 @@ function TextInfos(props) {
 
                   <Row className="mt-3">
                     <Col>
-                    
-                        {/* {images.map((i) => (
-                          <tr key={v4()}>
-                            <td>
-                              <label>{i}</label>
-                            </td>
-                            <td>
-                              <Button variant="danger">
-                                <FaTrash size={16} />
-                              </Button>
-                            </td>{" "}
-                          </tr>
-                        ))} */}
-                        {images.map(i => <ImageAdded key={i.id} removeImage={handleRemoveImage} image={i} />)}
-                      
-                      
+                      {images.map((i) => (
+                        <ImageAdded
+                          key={i.id}
+                          removeImage={handleRemoveImage}
+                          image={i}
+                        />
+                      ))}
                     </Col>
                   </Row>
                 </Card.Body>
               </Card>
               <Card className="mt-4">
-                <Card.Header as="h2">
-                  {" "}
-                  Phrases{" "}
-                  
-                </Card.Header>
+                <Card.Header as="h2"> Phrases </Card.Header>
                 <Card.Body className="p-4">
-              <Sentence addSentence={handleAddSentence}/>
-              <hr />
-              {sentences.map(s => <SentenceAdded key={s.id} sentence={s} sentences={sentences} setSentences = {setSentences} removeSentence={handleRemoveSentence}/>)}
+                  <Sentence addSentence={handleAddSentence} />
+                  <hr />
+                  {sentences.map((s) => (
+                    <SentenceAdded
+                      key={s.id}
+                      sentence={s}
+                      sentences={sentences}
+                      setSentences={setSentences}
+                      removeSentence={handleRemoveSentence}
+                    />
+                  ))}
                 </Card.Body>
               </Card>
-              
 
-              
-             
+              <Question number="1" handleChangeQuestion={handleChangeQuestion}/>
+              <Question number="2" handleChangeQuestion={handleChangeQuestion}/>
+              <Question number="3" handleChangeQuestion={handleChangeQuestion}/>
+              <Question number="4" handleChangeQuestion={handleChangeQuestion}/>
+              <Question number="5" handleChangeQuestion={handleChangeQuestion}/>
+              <Question number="6" handleChangeQuestion={handleChangeQuestion}/>
 
-              <Question />
-              <Question />
-              <Question />
-              <Question />
-              
               <Row className="text-end mb-5 mt-4">
                 <Col>
-                  <Button variant="primary">Valider</Button>
+                  <Button onClick={handleValidate} variant="primary">Valider</Button>
                 </Col>
               </Row>
             </Col>
