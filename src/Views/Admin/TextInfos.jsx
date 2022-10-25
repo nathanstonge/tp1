@@ -23,7 +23,7 @@ import { addText } from "/src/redux.jsx";
 
 function TextInfos(props) {
   const dispatch = useDispatch();
-  let _titre;
+  let _titre, _titreAudio, _titreImage;
   const [images, setImages] = useState([]);
   const [sentences, setSentences] = useState([]);
   const [questions, setQuestions] = useState([
@@ -105,13 +105,14 @@ function TextInfos(props) {
   const handleValidate = () => {
     const newText = {
       titre: _titre.value,
+      audioTitre: _titreAudio.value,
+      imageTitre: _titreImage.value,
       images: images,
       phrases: sentences,
-      questions: questions
+      questions: questions,
     };
-    dispatch(addText(newText))
+    dispatch(addText(newText));
   };
-  
 
   return (
     <div>
@@ -133,12 +134,28 @@ function TextInfos(props) {
                 </Col>
                 <Col xs={10} className="pt-2">
                   <Form.Control
-                  ref={input => _titre = input}
+                    ref={(input) => (_titre = input)}
                     placeholder="Entrez le titre"
                     required
                     className="mb-2"
                     type="text"
                   />
+                  <Row>
+                    <Col xs={3} className="pt-2">
+                      <Form.Label as="h6">Audio :</Form.Label>
+                    </Col>
+                    <Col>
+                      <Form.Control ref={(input) => (_titreAudio = input)} className="mb-3" type="file" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={3} className="pt-2">
+                      <Form.Label as="h6">Source image :</Form.Label>
+                    </Col>
+                    <Col>
+                      <Form.Control ref={(input) => (_titreImage = input)}  className="mb-3" type="file" />
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
               <Card className="mt-4">
@@ -176,16 +193,36 @@ function TextInfos(props) {
                 </Card.Body>
               </Card>
 
-              <Question number="1" handleChangeQuestion={handleChangeQuestion}/>
-              <Question number="2" handleChangeQuestion={handleChangeQuestion}/>
-              <Question number="3" handleChangeQuestion={handleChangeQuestion}/>
-              <Question number="4" handleChangeQuestion={handleChangeQuestion}/>
-              <Question number="5" handleChangeQuestion={handleChangeQuestion}/>
-              <Question number="6" handleChangeQuestion={handleChangeQuestion}/>
+              <Question
+                number="1"
+                handleChangeQuestion={handleChangeQuestion}
+              />
+              <Question
+                number="2"
+                handleChangeQuestion={handleChangeQuestion}
+              />
+              <Question
+                number="3"
+                handleChangeQuestion={handleChangeQuestion}
+              />
+              <Question
+                number="4"
+                handleChangeQuestion={handleChangeQuestion}
+              />
+              <Question
+                number="5"
+                handleChangeQuestion={handleChangeQuestion}
+              />
+              <Question
+                number="6"
+                handleChangeQuestion={handleChangeQuestion}
+              />
 
               <Row className="text-end mb-5 mt-4">
                 <Col>
-                  <Button onClick={handleValidate} variant="primary">Valider</Button>
+                  <Button onClick={handleValidate} variant="primary">
+                    Valider
+                  </Button>
                 </Col>
               </Row>
             </Col>

@@ -30,11 +30,13 @@ function Menu(props) {
             <b>Bienvenue</b> {connectedUser.prenom} {connectedUser.nom}{" "}
           </Navbar.Brand>
           <Nav className="text-end" variant="pills" >
-            <Nav.Item>
-              <Nav.Link>Les textes</Nav.Link>
+          <Nav.Item>
+            {connectedUser.typeCompte == "Admin" ? (
+              <Nav.Link as={Link} to="/main-admin">Les textes</Nav.Link>
+            ) : (<Nav.Link as={Link} to="/main-client">Les textes</Nav.Link>)}
             </Nav.Item>
             {connectedUser.typeCompte == "Admin" ? (
-              <Nav.Link>Statistiques</Nav.Link>
+              <Nav.Link as={Link} to="/stats">Statistiques</Nav.Link>
             ) : (<></>)}
             <Nav.Item>
               <Nav.Link as={Link} to="/modify-account">

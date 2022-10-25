@@ -8,6 +8,8 @@ import TextsClient from "./Views/Client/TextsClient";
 import ModifyAccount from "./Views/ModifyAccount";
 import NotFoundUser from "./Views/NotFoundUser";
 import TextInfos from "./Views/Admin/TextInfos";
+import StatsAdmin from "./Views/Admin/StatsAdmin";
+import Text from "./Views/Text";
 
 export default () => (
   <>
@@ -21,6 +23,8 @@ export default () => (
         <Route path="/modify-account" element={<ModifyAccount/>}/>
         <Route path="/user-not-found" element={<NotFoundUser/>}/>
         <Route path="/add-text" element={<TextInfos/>}/>
+        <Route path="/stats" element={<StatsAdmin/>}/>
+        <Route path="/text" element={<Text/>}/>
       </Routes>
 
     </HashRouter>

@@ -27,11 +27,14 @@ function Login(props) {
     const clientUsers = users.filter((u) => u.typeCompte == "Client");
     let foundUser = false;
     const clientUser = clientUsers.find(u => u.nomUtilisateur == _usernameInput.value);
+  if(clientUser != undefined) {
     if (clientUser.motPasse == _passwordInput.value) {
         foundUser = true;
         navigateTo("/main-client");
           dispatch(connectUser(clientUser));
       }
+    }
+    
     if(!foundUser){
      alert("Le nom d'utilisateur ou le mot de passe est invalide.");
      _usernameInput.value = "";
@@ -43,11 +46,13 @@ function Login(props) {
     const adminUsers = users.filter((u) => u.typeCompte == "Admin");
     let foundUser = false;
     const adminUser = adminUsers.find(u => u.nomUtilisateur == _usernameInput.value);
+    if(adminUser != undefined) {
     if (adminUser.motPasse == _passwordInput.value) {
         foundUser = true;
         navigateTo("/main-admin");
           dispatch(connectUser(adminUser));
-      }
+      } 
+    }
     if(!foundUser){
      alert("Le nom d'utilisateur ou le mot de passe est invalide.");
      _usernameInput.value = "";
