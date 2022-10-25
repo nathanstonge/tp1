@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import AnswerChoice from "./AnswerChoice";
 import { v4 } from "uuid";
+import { useSelector } from "react-redux";
 
 function Question(props) {
+  // const connectedUser = useSelector(state => state.sessionUser);
   const [answerChoices, setAnswerChoices] = useState([
     { id: 1, text: "", audio: "", image: "" },
     { id: 2, text: "", audio: "", image: "" },
@@ -12,7 +14,15 @@ function Question(props) {
     { id: 4, text: "", audio: "", image: "" },
   ]);
   let _text, _audio, _answer;
+  // const [text, setText] = useState("");
+  // useEffect(() => {
+  //   if(connectedUser.editMode == true){
+  //     setAnswerChoices(props.question.answerChoices);
+  //     setText(props.question.text);
+  //   }
 
+  // });
+  
   const [answer, setAnswer] = useState("");
 
   const replaceAnswerChoices = (id, answerChoice) => {
@@ -43,6 +53,7 @@ function Question(props) {
   };
 
   const handleChange = () => {
+    // setText(text);
     const question = {
       id: props.number,
       text: _text.value,
@@ -62,6 +73,7 @@ function Question(props) {
           <Form.Control
             onChange={handleChange}
             ref={(input) => (_text = input)}
+            // value={text}
             placeholder="Entrez la question"
             required
             className="mb-3"

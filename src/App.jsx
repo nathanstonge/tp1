@@ -23,6 +23,7 @@ export default () => (
         <Route path="/modify-account" element={<ModifyAccount/>}/>
         <Route path="/user-not-found" element={<NotFoundUser/>}/>
         <Route path="/add-text" element={<TextInfos/>}/>
+        <Route path="/modify-text" element={<TextInfos/>}/>
         <Route path="/stats" element={<StatsAdmin/>}/>
         <Route path="/text" element={<Text/>}/>
       </Routes>

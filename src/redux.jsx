@@ -14,6 +14,8 @@ const usersSlice = createSlice({
       typeCompte: "Admin",
       codeAccesAdmin: "2525",
       textInUse:{},
+      textsCompleted: [],
+      editMode: false,
     },
     {
       id: 2,
@@ -25,6 +27,8 @@ const usersSlice = createSlice({
       typeCompte: "Client",
       codeAccesAdmin: "",
       textInUse:{},
+      textsCompleted: [],
+      editMode: false,
     },
   ],
   reducers: {
@@ -39,6 +43,8 @@ const usersSlice = createSlice({
         typeCompte: action.payload.typeCompte,
         codeAccesAdmin: action.payload.codeAccesAdmin,
         textInUse: {},
+        textsCompleted: [],
+        editMode: false,
       };
       state.push(newUser);
     },
@@ -47,6 +53,44 @@ const usersSlice = createSlice({
       state = state.filter((u) => u.id !== modifiedUser.id);
       state.push(modifiedUser);
       return state;
+    },
+    addTextCompleted: (state, action) => {
+      // // [{text: {}, bonnesReponses:[], date:""}]
+      // // on recoit sessionUser(textInUse), bonnesReponses(["", ""])
+      
+      // // console.log(action.payload.bonnesReponses);
+      // // console.log(action.payload.date);
+      const newTextResult = {text: action.payload.connectedUser.textInUse, bonnesReponses: action.payload.bonnesReponses, date: action.payload.date};
+    
+     
+      // const stateWithOnlyUser = state.filter((u) => u.id === action.payload.connectedUser.id);
+      // stateWithOnlyUser.push(...stateWithOnlyUser, newTextResult);
+
+      // state = state.filter((u) => u.id !== action.payload.connectedUser.id);
+      // state.push(stateWithOnlyUser);
+      // return state;
+      
+    
+      console.log(newTextResult);
+      const newUser = {
+        id: action.payload.connectedUser.id,
+        nom: action.payload.connectedUser.nom,
+        prenom: action.payload.connectedUser.prenom,
+        dateNaissance: action.payload.connectedUser.dateNaissance,
+        nomUtilisateur: action.payload.connectedUser.nomUtilisateur,
+        motPasse: action.payload.connectedUser.motPasse,
+        typeCompte: action.payload.connectedUser.typeCompte,
+        codeAccesAdmin: action.payload.connectedUser.codeAccesAdmin,
+        textInUse: {},
+        textsCompleted: [...action.payload.connectedUser.textsCompleted, newTextResult],
+        editMode:false,
+      };
+       state = state.filter((u) => u.id !== action.payload.connectedUser.id);
+      state.push(newUser);
+      return state;
+
+      
+
     },
     
   },
@@ -70,6 +114,10 @@ const sessionUserSlice = createSlice({
     },
     unuseText: (state, action) => {
       state.textInUse = {};
+      return state;
+    },
+    setEditMode : (state, action) => {
+      state.editMode = !state.editMode;
       return state;
     },
     
@@ -426,8 +474,6 @@ const textsSlice = createSlice({
   ],
   reducers: {
     addText: (state, action) => {
-      console.log(action.payload);
-
       const newText = {
         id: v4(),
         audioTitre: action.payload.audioTitre,
@@ -438,6 +484,10 @@ const textsSlice = createSlice({
         questions: action.payload.questions,
       };
       state.push(newText);
+    },
+    deleteText: (state, action) => {
+      state = state.filter(t => t.id != action.payload.id);
+      return state;
     },
   },
 });
@@ -497,13 +547,13 @@ const textsSlice = createSlice({
 // });
 
 //Users
-export const { addUser, editUser } = usersSlice.actions;
+export const { addUser, editUser, addTextCompleted } = usersSlice.actions;
 
 //Session
-export const { connectUser, disconnectUser, useText, unuseText } = sessionUserSlice.actions;
+export const { connectUser, disconnectUser, useText, unuseText, setEditMode } = sessionUserSlice.actions;
 
 //Texts
-export const { addText } = textsSlice.actions;
+export const { addText, deleteText } = textsSlice.actions;
 
 
 

@@ -1,20 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Row, Card, Button, Container } from "react-bootstrap";
 import { GrDocumentSound } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPlus, FaPencilAlt, FaTrash } from "react-icons/fa";
-import { useText } from "/src/redux.jsx";
+import { useText, deleteText } from "/src/redux.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import { setEditMode } from "../redux";
 
 function Texts(props) {
+  const [styleWords, setStyleWords] = useState({});
   const navigateTo = useNavigate();
   const dispatch = useDispatch();
+  const connectedUser = useSelector(state => state.sessionUser);
+ 
 
   const openText = () => {
     const textInUse = props.text;
     dispatch(useText(textInUse));
     navigateTo("/text");
   };
+
+  const playSentence = () => {
+    const audio = new Audio(props.text.audioTitre);
+     audio.play();
+      setStyleWords({backgroundColor:"#ffc107", color: "black"});
+      setTimeout(() => setStyleWords({}), 5000);
+
+  }
+
+  const handleEdit = () => {
+    const textInUse = props.text;
+    dispatch(useText(textInUse));
+    navigateTo("/modify-text");
+    dispatch(setEditMode(connectedUser.editMode));
+
+  }
+
+ 
 
   return (
     <div>
@@ -31,15 +53,15 @@ function Texts(props) {
                   </Button>
                   </Col>
                     
-                  <Col style={{ textDecoration: "none" }}>
+                  <Col>
                   <Button  onClick={openText}  style={{backgroundColor:"transparent", borderColor: "transparent"}}>
-                    <h3 style={{ color: "black" }}>{props.text.titre}</h3>
+                    <h3 style={{...styleWords, color: "black"}}>{props.text.titre}</h3>
                   </Button>
                   </Col>
                   <Col xs={2} className="mt-3">
                     <Button
                       variant="warning"
-                      onClick={() => new Audio(props.text.audioTitre).play()}
+                      onClick={playSentence}
                     >
                       <GrDocumentSound />
                     </Button>
@@ -50,11 +72,11 @@ function Texts(props) {
           </Col>
           {props.connectedUser.typeCompte == "Admin" ? (
             <Col xs={1} >
-              <Button className="mt-2" variant="primary">
+              <Button onClick={handleEdit} className="mt-2" variant="primary">
                 <FaPencilAlt />
               </Button>
               <br></br>
-              <Button className="mt-2" variant="danger">
+              <Button onClick={() => dispatch(deleteText(props.text))} className="mt-2" variant="danger">
                 <FaTrash />
               </Button>
             </Col>

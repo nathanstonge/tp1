@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Form, Row, Card } from "react-bootstrap";
 import { BiArrowBack } from "react-icons/bi";
 import { FaRegQuestionCircle } from "react-icons/fa";
@@ -12,14 +12,28 @@ import Phrase from "../Components/Phrase";
 import { v4 } from "uuid";
 
 function AnswerChoice(props) {
-  console.log(props.answerChoice);
+  
+  const [styleWords, setStyleWords] = useState({});
   const playSentence = () => {
-    new Audio(props.answerChoice.audio).play();
-  };
+      const audio = new Audio(props.answerChoice.audio);
+       audio.play();
+        setStyleWords({backgroundColor:"#ffc107", color: "black"});
+        setTimeout(() => setStyleWords({}), 5000);
+  
+    }
+
+  const handleChange = () => {
+    props.handleChangeAnswerChoice(props.answerChoice, props.question);
+    
+  }
+
+
+
+
   return (
     <Row>
       <label>
-        <input type="radio" name="product" className="card-input-element" />
+        <input onChange={handleChange} type="radio" name={props.name} className="card-input-element" />
 
         <div className="card card-default card-input">
           <div className="card-body">
@@ -33,7 +47,7 @@ function AnswerChoice(props) {
                 <img src={props.answerChoice.image} width="90px" />
               </Col>
               <Col className="pt-4">
-                <p style={{ fontSize: "18px" }}>{props.answerChoice.text}</p>
+                <p style={{...styleWords, fontSize: "18px" }}>{props.answerChoice.text}</p>
               </Col>
             </Row>
           </div>

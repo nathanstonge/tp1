@@ -3,7 +3,9 @@ import { v4 } from 'uuid';
 import Word from './Word';
 
 function Titre(props) {
+   
     const words = props.titre.split(" ");
+    
 
     return (
         <span>

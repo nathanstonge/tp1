@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Form, Row, Card } from "react-bootstrap";
 import { BiArrowBack } from "react-icons/bi";
 import { FaRegQuestionCircle } from "react-icons/fa";
@@ -15,18 +15,24 @@ import Word from "./Word";
 
 
 function Question(props) {
+  const [styleWords, setStyleWords] = useState({});
+  const playSentence = () => {
+      const audio = new Audio(props.question.audio);
+       audio.play();
+        setStyleWords({backgroundColor:"#ffc107", color: "black"});
+        setTimeout(() => setStyleWords({}), 5000);
+  
+    }
    
     const indexesArray = [0,1,2,3];
+   
 const mixedIndexesArray = indexesArray.sort((a, b) => 0.5 - Math.random());
-console.log(mixedIndexesArray);
+
 
     const words = props.question.text.split(" ");
-    console.log(words);
 
-    const playSentence = () => {
-        new Audio(props.question.audio).play()
-    }
 
+   
   return (
     <>
     <Card className="mb-3">
@@ -39,12 +45,12 @@ console.log(mixedIndexesArray);
                           <GrDocumentSound />
                         </Button>
                       </Col>
-        <Col as="h5">{words.map(w => <Word key={v4()} mot={w}/>)}</Col>
+        <Col as="h5">{words.map(w => <Word style={styleWords} key={v4()} mot={w}/>)}</Col>
       </Row>
-      <AnswerChoice numero="1" answerChoice={props.question.answerChoices[mixedIndexesArray[0]]}/>
-      <AnswerChoice numero="2" answerChoice={props.question.answerChoices[mixedIndexesArray[1]]}/>
-      <AnswerChoice numero="3" answerChoice={props.question.answerChoices[mixedIndexesArray[2]]}/>
-      <AnswerChoice numero="4" answerChoice={props.question.answerChoices[mixedIndexesArray[3]]}/>
+      <AnswerChoice name={props.numero} handleChangeAnswerChoice={props.handleChangeAnswerChoice} numero="1" answerChoice={props.question.answerChoices[mixedIndexesArray[0]]} question={props.question}/>
+      <AnswerChoice name={props.numero} handleChangeAnswerChoice={props.handleChangeAnswerChoice} numero="2" answerChoice={props.question.answerChoices[mixedIndexesArray[1]]} question={props.question}/>
+      <AnswerChoice name={props.numero} handleChangeAnswerChoice={props.handleChangeAnswerChoice} numero="3" answerChoice={props.question.answerChoices[mixedIndexesArray[2]]} question={props.question}/>
+      <AnswerChoice name={props.numero} handleChangeAnswerChoice={props.handleChangeAnswerChoice} numero="4" answerChoice={props.question.answerChoices[mixedIndexesArray[3]]} question={props.question}/>
         </Card.Body>
 
     </Card>

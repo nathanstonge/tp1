@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -18,22 +18,41 @@ import Question from "../../Components/Admin/Question";
 import { v4 } from "uuid";
 import ImageAdded from "../../Components/Admin/ImageAdded";
 import SentenceAdded from "../../Components/Admin/SentenceAdded";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addText } from "/src/redux.jsx";
 
 function TextInfos(props) {
+  const connectedUser = useSelector(state => state.sessionUser);
   const dispatch = useDispatch();
-  let _titre, _titreAudio, _titreImage;
-  const [images, setImages] = useState([]);
-  const [sentences, setSentences] = useState([]);
-  const [questions, setQuestions] = useState([
-    { id: 1, text: "", audio: "", answer: "", answerChoices: [] },
-    { id: 2, text: "", audio: "", answer: "", answerChoices: [] },
-    { id: 3, text: "", audio: "", answer: "", answerChoices: [] },
-    { id: 4, text: "", audio: "", answer: "", answerChoices: [] },
-    { id: 5, text: "", audio: "", answer: "", answerChoices: [] },
-    { id: 6, text: "", audio: "", answer: "", answerChoices: [] },
-  ]);
+
+    let _titre, _titreAudio, _titreImage;
+    // const [titre, setTitre] = useState("");
+    const [images, setImages] = useState([]);
+    const [sentences, setSentences] = useState([]);
+    const [questions, setQuestions] = useState([
+      { id: 1, text: "", audio: "", answer: "", answerChoices: [] },
+      { id: 2, text: "", audio: "", answer: "", answerChoices: [] },
+      { id: 3, text: "", audio: "", answer: "", answerChoices: [] },
+      { id: 4, text: "", audio: "", answer: "", answerChoices: [] },
+      { id: 5, text: "", audio: "", answer: "", answerChoices: [] },
+      { id: 6, text: "", audio: "", answer: "", answerChoices: [] },
+    ]);
+
+    // useEffect(() => {
+    //   // Update the document title using the browser API
+    //   if(connectedUser.editMode == true) {
+    //     // _titre = connectedUser.textInUse.titre;
+    //     setTitre(connectedUser.textInUse.titre);
+    //     _titreAudio = connectedUser.textInUse.audioTitre;
+    //     _titreImage = connectedUser.textInUse.imageTitre;
+    //     setImages(connectedUser.textInUse.images);
+    //     setSentences(connectedUser.textInUse.phrases);
+    //     setQuestions(connectedUser.textInUse.questions);
+    
+    //   }
+    //   console.log(_titre);
+     
+    // });
 
   const handleAddImage = (imageScr) => {
     const newImage = { id: v4(), src: imageScr };
@@ -70,6 +89,7 @@ function TextInfos(props) {
   const replaceQuestions = (id, question) => {
     const questionsCopy = questions;
     const index = questions.findIndex((q) => q.id == id);
+    console.log(questionsCopy);
     questionsCopy[index] = question;
     return questionsCopy;
   };
@@ -134,6 +154,7 @@ function TextInfos(props) {
                 </Col>
                 <Col xs={10} className="pt-2">
                   <Form.Control
+                 
                     ref={(input) => (_titre = input)}
                     placeholder="Entrez le titre"
                     required
@@ -193,30 +214,46 @@ function TextInfos(props) {
                 </Card.Body>
               </Card>
 
-              <Question
+             {connectedUser.editMode == true ? (<><Question
                 number="1"
-                handleChangeQuestion={handleChangeQuestion}
-              />
-              <Question
-                number="2"
-                handleChangeQuestion={handleChangeQuestion}
-              />
-              <Question
-                number="3"
-                handleChangeQuestion={handleChangeQuestion}
-              />
-              <Question
-                number="4"
-                handleChangeQuestion={handleChangeQuestion}
-              />
-              <Question
-                number="5"
-                handleChangeQuestion={handleChangeQuestion}
-              />
-              <Question
-                number="6"
-                handleChangeQuestion={handleChangeQuestion}
-              />
+                question={connectedUser.textInUse.questions[0]}
+                handleChangeQuestion={handleChangeQuestion} /><Question
+                  number="2"
+                  question={connectedUser.textInUse.questions[1]}
+                  handleChangeQuestion={handleChangeQuestion} /><Question
+                  number="3"
+                  question={connectedUser.textInUse.questions[2]}
+                  handleChangeQuestion={handleChangeQuestion} /><Question
+                  number="4"
+                  question={connectedUser.textInUse.questions[3]}
+                  handleChangeQuestion={handleChangeQuestion} /><Question
+                  number="5"
+                  question={connectedUser.textInUse.questions[4]}
+                  handleChangeQuestion={handleChangeQuestion} /><Question
+                  number="6"
+                  question={connectedUser.textInUse.questions[5]}
+                  handleChangeQuestion={handleChangeQuestion} /></>): <><Question
+                  number="1"
+                  
+                  handleChangeQuestion={handleChangeQuestion} /><Question
+                    number="2"
+                    
+                    handleChangeQuestion={handleChangeQuestion} /><Question
+                    number="3"
+                    
+                    handleChangeQuestion={handleChangeQuestion} /><Question
+                    number="4"
+                   
+                    handleChangeQuestion={handleChangeQuestion} /><Question
+                    number="5"
+                   
+                    handleChangeQuestion={handleChangeQuestion} /><Question
+                    number="6"
+                   
+                    handleChangeQuestion={handleChangeQuestion} /></>}
+
+             
+        
 
               <Row className="text-end mb-5 mt-4">
                 <Col>

@@ -18,12 +18,12 @@ function Word(props) {
     <span>
       <table className="d-inline me-2 text-center">
         <tbody>
-          <tr>
+          <tr >
             <td>
               <img src={imgSrc} alt="" width="70px" />
             </td>
           </tr>
-          <tr>
+          <tr style={props.style}>
             <td>{props.mot}</td>
           </tr>
         </tbody>

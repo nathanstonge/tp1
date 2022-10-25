@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { v4 } from 'uuid';
 import Word from './Word';
 import { Button, Col, Container, Form, Row, Card } from "react-bootstrap";
@@ -7,9 +7,13 @@ import { GrDocumentSound } from "react-icons/gr";
 function Phrase(props) {
   
     const words = props.phrase.text.split(" ");
+    const [styleWords, setStyleWords] = useState({});
     
     const playSentence = () => {
-        new Audio(props.phrase.audio).play();
+      const audio = new Audio(props.phrase.audio);
+       audio.play();
+        setStyleWords({backgroundColor:"#ffc107"});
+        setTimeout(() => setStyleWords({}), 5000);
 
     }
 
@@ -23,9 +27,9 @@ function Phrase(props) {
                           <GrDocumentSound />
                         </Button>
                       </Col>
-                      <Col className="pt-4" style={{ fontSize: "20px" }}>
+                      <Col className="pt-4" style={{ fontSize: "20px"}}>
                        
-                          {words.map(w => <Word key={v4()} mot={w} />)}
+                          {words.map(w => <Word style={styleWords} key={v4()} mot={w} />)}
                         
                       </Col>
                     </Row>
