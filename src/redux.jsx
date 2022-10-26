@@ -1,4 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { useState } from "react";
 import { v4 } from "uuid";
 
 const usersSlice = createSlice({
@@ -485,6 +486,49 @@ const textsSlice = createSlice({
       };
       state.push(newText);
     },
+    createText: (state, action) => {
+      const newText = {
+        id: action.payload,
+        audioTitre: "",
+        imageTitre: "",
+        titre: "",
+        images: [],
+        phrases: [],
+        questions: [],
+      };
+
+      state.push(newText);
+
+    },
+    changeAttribute: (state, action) => {
+    //   const newText = {
+    //     id: action.payload.text.id,
+    // audioTitre: action.payload.text.audioTitre,
+    // imageTitre: action.payload.text.imageTitre,
+    // titre: action.payload.text.titre,
+    // images: action.payload.text.images,
+    // phrases: action.payload.text.phrases,
+    // questions: action.payload.text.questions};
+
+    //   switch (action.payload.attribute) {
+    //     case "titre":
+    //       newText.titre = action.payload.text;
+    //       break;
+    //     case "audioTitre":
+    //       newText.titre = action.payload.audioTitre;
+    //       break;
+    //     case "imageTitre":
+    //       newText.titre = action.payload.imageTitre;
+    //       break;
+      
+    //     default:
+    //       break;
+    //   }
+      console.log(action.payload);
+      state = state.filter(t => t.id != action.payload.id);
+      state.push(state.action.payload);
+
+    },
     deleteText: (state, action) => {
       state = state.filter(t => t.id != action.payload.id);
       return state;
@@ -553,7 +597,7 @@ export const { addUser, editUser, addTextCompleted } = usersSlice.actions;
 export const { connectUser, disconnectUser, useText, unuseText, setEditMode } = sessionUserSlice.actions;
 
 //Texts
-export const { addText, deleteText } = textsSlice.actions;
+export const { addText, deleteText, createText, changeAttribute } = textsSlice.actions;
 
 
 

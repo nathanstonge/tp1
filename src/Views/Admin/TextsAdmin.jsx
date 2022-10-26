@@ -1,14 +1,24 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Menu from "../../Components/Menu";
 import NotFoundUser from "../NotFoundUser";
 import { FaPlus, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Button, Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Texts from "../../Components/Texts";
 import { v4 } from "uuid";
+import { addText, createText, changeAttribute, useText } from "/src/redux.jsx";
 
 function TextsAdmin(props) {
+  const dispatch = useDispatch();
+  const navigateTo = useNavigate();
+  const handleAddText = () => {
+    let id = v4();
+    console.log(id);
+    dispatch(createText(id));
+    navigateTo("/add-text");
+    
+}
   const texts = useSelector((state) => state.texts);
   let btnAddStyle = {
     bottom: "50px",
@@ -43,8 +53,7 @@ function TextsAdmin(props) {
           <Button
             variant="success"
             style={btnAddStyle}
-            as={Link}
-            to="/add-text"
+            onClick={handleAddText}
           >
             <FaPlus size={24} />
           </Button>

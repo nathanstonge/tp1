@@ -20,39 +20,29 @@ import ImageAdded from "../../Components/Admin/ImageAdded";
 import SentenceAdded from "../../Components/Admin/SentenceAdded";
 import { useDispatch, useSelector } from "react-redux";
 import { addText } from "/src/redux.jsx";
+import QuestionAdded from "../../Components/Admin/QuestionAdded";
 
 function TextInfos(props) {
-  const connectedUser = useSelector(state => state.sessionUser);
+  const connectedUser = useSelector((state) => state.sessionUser);
+  const texts = useSelector((state) => state.texts);
   const dispatch = useDispatch();
+  let textInUse;
 
-    let _titre, _titreAudio, _titreImage;
-    // const [titre, setTitre] = useState("");
-    const [images, setImages] = useState([]);
-    const [sentences, setSentences] = useState([]);
-    const [questions, setQuestions] = useState([
-      { id: 1, text: "", audio: "", answer: "", answerChoices: [] },
-      { id: 2, text: "", audio: "", answer: "", answerChoices: [] },
-      { id: 3, text: "", audio: "", answer: "", answerChoices: [] },
-      { id: 4, text: "", audio: "", answer: "", answerChoices: [] },
-      { id: 5, text: "", audio: "", answer: "", answerChoices: [] },
-      { id: 6, text: "", audio: "", answer: "", answerChoices: [] },
-    ]);
+  if (connectedUser.editMode == false) {
+    textInUse = texts[texts.length - 1];
+  }
+  //State principal
+  const [text, setText] = useState(textInUse);
+  const [images, setImages] = useState(text.images);
+  const [sentences, setSentences] = useState(text.phrases);
+  const [questions, setQuestions] = useState(text.questions);
 
-    // useEffect(() => {
-    //   // Update the document title using the browser API
-    //   if(connectedUser.editMode == true) {
-    //     // _titre = connectedUser.textInUse.titre;
-    //     setTitre(connectedUser.textInUse.titre);
-    //     _titreAudio = connectedUser.textInUse.audioTitre;
-    //     _titreImage = connectedUser.textInUse.imageTitre;
-    //     setImages(connectedUser.textInUse.images);
-    //     setSentences(connectedUser.textInUse.phrases);
-    //     setQuestions(connectedUser.textInUse.questions);
-    
-    //   }
-    //   console.log(_titre);
-     
-    // });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setText((prevValue) => {
+      return { ...prevValue, [name]: value };
+    });
+  };
 
   const handleAddImage = (imageScr) => {
     const newImage = { id: v4(), src: imageScr };
@@ -86,52 +76,108 @@ function TextInfos(props) {
     });
   };
 
-  const replaceQuestions = (id, question) => {
-    const questionsCopy = questions;
-    const index = questions.findIndex((q) => q.id == id);
-    console.log(questionsCopy);
-    questionsCopy[index] = question;
-    return questionsCopy;
+  const handleAddQuestion = (question) => {
+    const newQuestion = {
+      id: v4(),
+      text: question.text,
+      audio: question.audio,
+      answer: "1",
+      answerChoices: []
+    };
+    console.log(newQuestion);
+    setQuestions((prevValue) => {
+      return [...prevValue, newQuestion];
+    });
+    
+  };
+  const handleRemoveQuestion = (id) => {
+    setQuestions((prevValues) => {
+      return prevValues.filter((q) => {
+        return q.id != id;
+      });
+    });
   };
 
-  const handleChangeQuestion = (question) => {
-    switch (question.id) {
-      case "1":
-        setQuestions(replaceQuestions(1, question));
-        break;
-      case "2":
-        setQuestions(replaceQuestions(2, question));
+  //Test asnwerchoices
+  const [answerChoices, setAnswerChoices] = useState(props.question.answerChoices);
+  const handleAddAnswerChoice = (answerChoice) => {
+    const newAnswerChoice = {
+      id: v4(),
+      text: answerChoice.text,
+      audio: answerChoice.audio,
+      image: answerChoice.image,
+    };
+    console.log(newAnswerChoice);
+    setAnswerChoices((prevValue) => {
+      return [...prevValue, newAnswerChoice];
+    });
+   
+    console.log(answerChoices);
+    // setQuestion(prevValue => {return {...prevValue, answerChoices: answerChoices}});
+    
 
-        break;
-      case "3":
-        setQuestions(replaceQuestions(3, question));
-
-        break;
-      case "4":
-        setQuestions(replaceQuestions(4, question));
-
-        break;
-      case "5":
-        setQuestions(replaceQuestions(5, question));
-
-        break;
-      case "6":
-        setQuestions(replaceQuestions(6, question));
-
-        break;
-    }
+  };
+  const handleRemoveAnswerChoice = (id) => {
+    setAnswerChoices((prevValues) => {
+      return prevValues.filter((a) => {
+        return a.id != id;
+      });
+    });
   };
 
+
+
+
+
+  //A retravailler
+
+  // const replaceQuestions = (id, question) => {
+  //   const questionsCopy = questions;
+  //   const index = questions.findIndex((q) => q.id == id);
+  //   console.log(questionsCopy);
+  //   questionsCopy[index] = question;
+  //   return questionsCopy;
+  // };
+
+  // const handleChangeQuestion = (question) => {
+  //   switch (question.id) {
+  //     case "1":
+  //       setQuestions(replaceQuestions(1, question));
+  //       break;
+  //     case "2":
+  //       setQuestions(replaceQuestions(2, question));
+
+  //       break;
+  //     case "3":
+  //       setQuestions(replaceQuestions(3, question));
+
+  //       break;
+  //     case "4":
+  //       setQuestions(replaceQuestions(4, question));
+
+  //       break;
+  //     case "5":
+  //       setQuestions(replaceQuestions(5, question));
+
+  //       break;
+  //     case "6":
+  //       setQuestions(replaceQuestions(6, question));
+
+  //       break;
+  //   }
+  // };
+  
   const handleValidate = () => {
     const newText = {
-      titre: _titre.value,
-      audioTitre: _titreAudio.value,
-      imageTitre: _titreImage.value,
+      titre: text.titre,
+      audioTitre: text.audioTitre,
+      imageTitre: text.imageTitre,
       images: images,
       phrases: sentences,
       questions: questions,
     };
-    dispatch(addText(newText));
+    console.log(newText);
+    //dispatch(addText(newText));
   };
 
   return (
@@ -154,8 +200,9 @@ function TextInfos(props) {
                 </Col>
                 <Col xs={10} className="pt-2">
                   <Form.Control
-                 
-                    ref={(input) => (_titre = input)}
+                    value={text.titre}
+                    name="titre"
+                    onChange={handleChange}
                     placeholder="Entrez le titre"
                     required
                     className="mb-2"
@@ -166,7 +213,13 @@ function TextInfos(props) {
                       <Form.Label as="h6">Audio :</Form.Label>
                     </Col>
                     <Col>
-                      <Form.Control ref={(input) => (_titreAudio = input)} className="mb-3" type="file" />
+                      <Form.Control
+                        name="audioTitre"
+                        value={text.audioTitre}
+                        onChange={handleChange}
+                        className="mb-3"
+                        type="file"
+                      />
                     </Col>
                   </Row>
                   <Row>
@@ -174,7 +227,13 @@ function TextInfos(props) {
                       <Form.Label as="h6">Source image :</Form.Label>
                     </Col>
                     <Col>
-                      <Form.Control ref={(input) => (_titreImage = input)}  className="mb-3" type="file" />
+                      <Form.Control
+                        name="imageTitre"
+                        value={text.imageTitre}
+                        onChange={handleChange}
+                        className="mb-3"
+                        type="file"
+                      />
                     </Col>
                   </Row>
                 </Col>
@@ -213,8 +272,17 @@ function TextInfos(props) {
                   ))}
                 </Card.Body>
               </Card>
-
-             {connectedUser.editMode == true ? (<><Question
+              <Card className="mt-4">
+                <Card.Header as="h2"> Questions </Card.Header>
+                <Card.Body className="p-4">
+                  <Question handleAddQuestion={handleAddQuestion} />
+                  <hr />
+                  
+               {questions.map(q => <QuestionAdded key={q.id} question={q} questions={questions} setQuestions={setQuestions} handleRemoveQuestion={handleRemoveQuestion}/>)}
+                  
+                </Card.Body>
+              </Card>
+              {/* {connectedUser.editMode == true ? (<><Question
                 number="1"
                 question={connectedUser.textInUse.questions[0]}
                 handleChangeQuestion={handleChangeQuestion} /><Question
@@ -250,10 +318,7 @@ function TextInfos(props) {
                     handleChangeQuestion={handleChangeQuestion} /><Question
                     number="6"
                    
-                    handleChangeQuestion={handleChangeQuestion} /></>}
-
-             
-        
+                    handleChangeQuestion={handleChangeQuestion} /></>} */}
 
               <Row className="text-end mb-5 mt-4">
                 <Col>
