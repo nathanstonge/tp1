@@ -2,17 +2,16 @@ import React from "react";
 import { FaTrash } from "react-icons/fa";
 import {
   Button,
-  Card,
   Col,
-  Container,
-  Form,
   Row,
-  Table,
 } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { deleteImage } from "/src/redux.jsx";
 
 function ImageAdded(props) {
+  const dispatch = useDispatch();
 const handleRemoveImage = () => {
-    props.removeImage(props.image.id);
+    dispatch(deleteImage(props.image.id));
 }
   return (
     <div>

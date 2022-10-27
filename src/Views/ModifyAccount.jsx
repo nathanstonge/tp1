@@ -14,7 +14,6 @@ function modifyAccount(props) {
   const otherUsers = useSelector((state) =>
     state.users.filter((u) => u.id !== connectedUser.id)
   );
-  const users = useSelector(state => state.users);
   const [userInfos, setUserInfos] = useState(connectedUser);
   let allowWindowDisplay = true;
 
@@ -33,41 +32,15 @@ function modifyAccount(props) {
     if (sameUser == false) {
       dispatch(editUser(userInfos));
       dispatch(connectUser(userInfos));
-      if(connectedUser.typeCompte == "Admin") {
-          navigateTo("/main-admin");
-
+      if (connectedUser.typeCompte == "Admin") {
+        navigateTo("/main-admin");
       } else if (connectedUser.typeCompte == "Client") {
-       
         navigateTo("/main-client");
       }
-    
     }
     event.preventDefault();
   };
-//   const handleConnexionClient = () => {
-//     const clientUsers = users.filter((u) => u.typeCompte == "Client");
-//     const clientUser = clientUsers.find(u => u.id == connectedUser.id);
-//    dispatch(connectUser(clientUser));
-        
-//   };
-//   const handleConnexionAdmin = () => {
-//     const adminUsers = otherUsers.filter((u) => u.typeCompte == "Admin");
-//     let foundUser = false;
-//     const adminUser = adminUsers.find(u => u.nomUtilisateur == _usernameInput.value);
-//     if (adminUser.motPasse == _passwordInput.value) {
-//         foundUser = true;
-//         navigateTo("/main-admin");
-//           dispatch(connectUser(adminUser));
-//       }
-//     if(!foundUser){
-//      alert("Le nom d'utilisateur ou le mot de passe est invalide.");
-//      _usernameInput.value = "";
-//      _passwordInput.value = "";
-//     }
-        
-    
-      
-//   };
+
   function handleChange(event) {
     const { name, value } = event.target;
 

@@ -1,17 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Table,
-} from "react-bootstrap";
-import { FaTrash } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { FaCheck } from "react-icons/fa";
 import { BiArrowBack } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Image from "../../Components/Admin/Image";
 import Sentence from "../../Components/Admin/Sentence";
 import Question from "../../Components/Admin/Question";
@@ -21,28 +12,31 @@ import SentenceAdded from "../../Components/Admin/SentenceAdded";
 import { useDispatch, useSelector } from "react-redux";
 import { addText } from "/src/redux.jsx";
 import QuestionAdded from "../../Components/Admin/QuestionAdded";
+import {
+  changeTitle,
+  changeAudioTitre,
+  changeImageTitre,
+  editText,
+  setEditMode,
+} from "../../redux";
 
 function TextInfos(props) {
   const connectedUser = useSelector((state) => state.sessionUser);
-  const texts = useSelector((state) => state.texts);
   const dispatch = useDispatch();
   let textInUse;
+  const navigateTo = useNavigate();
 
   if (connectedUser.editMode == false) {
-    textInUse = texts[texts.length - 1];
+    textInUse = useSelector((state) => state.textInModification);
+  } else {
+    textInUse = connectedUser.textInUse;
   }
-  //State principal
+  const textInModification = useSelector((state) => state.textInModification);
+
   const [text, setText] = useState(textInUse);
   const [images, setImages] = useState(text.images);
   const [sentences, setSentences] = useState(text.phrases);
   const [questions, setQuestions] = useState(text.questions);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setText((prevValue) => {
-      return { ...prevValue, [name]: value };
-    });
-  };
 
   const handleAddImage = (imageScr) => {
     const newImage = { id: v4(), src: imageScr };
@@ -82,13 +76,12 @@ function TextInfos(props) {
       text: question.text,
       audio: question.audio,
       answer: "1",
-      answerChoices: []
+      answerChoices: [],
     };
-    console.log(newQuestion);
     setQuestions((prevValue) => {
       return [...prevValue, newQuestion];
     });
-    
+    console.log(questions);
   };
   const handleRemoveQuestion = (id) => {
     setQuestions((prevValues) => {
@@ -99,24 +92,13 @@ function TextInfos(props) {
   };
 
   //Test asnwerchoices
-  const [answerChoices, setAnswerChoices] = useState(props.question.answerChoices);
+  const [answerChoices, setAnswerChoices] = useState([]);
   const handleAddAnswerChoice = (answerChoice) => {
-    const newAnswerChoice = {
-      id: v4(),
-      text: answerChoice.text,
-      audio: answerChoice.audio,
-      image: answerChoice.image,
-    };
-    console.log(newAnswerChoice);
     setAnswerChoices((prevValue) => {
-      return [...prevValue, newAnswerChoice];
+      return [...prevValue, answerChoice];
     });
-   
-    console.log(answerChoices);
-    // setQuestion(prevValue => {return {...prevValue, answerChoices: answerChoices}});
-    
-
   };
+
   const handleRemoveAnswerChoice = (id) => {
     setAnswerChoices((prevValues) => {
       return prevValues.filter((a) => {
@@ -125,67 +107,51 @@ function TextInfos(props) {
     });
   };
 
-
-
-
-
-  //A retravailler
-
-  // const replaceQuestions = (id, question) => {
-  //   const questionsCopy = questions;
-  //   const index = questions.findIndex((q) => q.id == id);
-  //   console.log(questionsCopy);
-  //   questionsCopy[index] = question;
-  //   return questionsCopy;
-  // };
-
-  // const handleChangeQuestion = (question) => {
-  //   switch (question.id) {
-  //     case "1":
-  //       setQuestions(replaceQuestions(1, question));
-  //       break;
-  //     case "2":
-  //       setQuestions(replaceQuestions(2, question));
-
-  //       break;
-  //     case "3":
-  //       setQuestions(replaceQuestions(3, question));
-
-  //       break;
-  //     case "4":
-  //       setQuestions(replaceQuestions(4, question));
-
-  //       break;
-  //     case "5":
-  //       setQuestions(replaceQuestions(5, question));
-
-  //       break;
-  //     case "6":
-  //       setQuestions(replaceQuestions(6, question));
-
-  //       break;
-  //   }
-  // };
-  
   const handleValidate = () => {
-    const newText = {
-      titre: text.titre,
-      audioTitre: text.audioTitre,
-      imageTitre: text.imageTitre,
-      images: images,
-      phrases: sentences,
-      questions: questions,
-    };
-    console.log(newText);
-    //dispatch(addText(newText));
+    dispatch(addText(textInModification));
+    navigateTo("/main-admin");
+  };
+
+  const [titre, setTitre] = useState(textInModification.titre);
+
+  const handleChangeTitre = (event) => {
+    setTitre(event.target.value);
+  };
+
+  const [audioTitre, setAudioTitre] = useState(textInModification.audioTitre);
+
+  const handleChangeAudioTitre = (event) => {
+    setAudioTitre(event.target.value);
+  };
+
+  const [imageTitre, setImageTitre] = useState(textInModification.imageTitre);
+
+  const handleChangeImageTitre = (event) => {
+    setImageTitre(event.target.value);
+  };
+  const handleAddTitre = () => {
+    dispatch(changeTitle(titre));
+    dispatch(changeImageTitre(imageTitre));
+    dispatch(changeAudioTitre(audioTitre));
+  };
+
+  const handleModify = () => {
+    dispatch(editText(textInModification));
+    dispatch(setEditMode(connectedUser));
+    navigateTo("/main-admin");
+  };
+
+  const handleRetour = () => {
+    if (connectedUser.editMode == true) {
+      dispatch(setEditMode(connectedUser));
+    }
+    navigateTo("/main-admin");
   };
 
   return (
     <div>
       <Button
-        as={Link}
-        to="/main-admin"
-        variant="primary"
+        onClick={handleRetour}
         style={{ left: "50px", top: "50px", position: "absolute" }}
       >
         <BiArrowBack /> Retour
@@ -200,9 +166,9 @@ function TextInfos(props) {
                 </Col>
                 <Col xs={10} className="pt-2">
                   <Form.Control
-                    value={text.titre}
+                    value={titre}
                     name="titre"
-                    onChange={handleChange}
+                    onChange={handleChangeTitre}
                     placeholder="Entrez le titre"
                     required
                     className="mb-2"
@@ -214,11 +180,12 @@ function TextInfos(props) {
                     </Col>
                     <Col>
                       <Form.Control
+                        placeholder="Entrez la source du fichier audio"
                         name="audioTitre"
-                        value={text.audioTitre}
-                        onChange={handleChange}
+                        value={audioTitre}
+                        onChange={handleChangeAudioTitre}
                         className="mb-3"
-                        type="file"
+                        type="text"
                       />
                     </Col>
                   </Row>
@@ -229,13 +196,25 @@ function TextInfos(props) {
                     <Col>
                       <Form.Control
                         name="imageTitre"
-                        value={text.imageTitre}
-                        onChange={handleChange}
+                        placeholder="Entrez la source de l'image"
+                        value={imageTitre}
+                        onChange={handleChangeImageTitre}
                         className="mb-3"
-                        type="file"
+                        type="text"
                       />
                     </Col>
                   </Row>
+                </Col>
+              </Row>
+              <Row className="mt-3">
+                <Col className="text-center">
+                  <Button
+                    onClick={handleAddTitre}
+                    variant="success"
+                    className="mb-1"
+                  >
+                    <FaCheck size={16} /> Confirmer le titre
+                  </Button>
                 </Col>
               </Row>
               <Card className="mt-4">
@@ -245,7 +224,7 @@ function TextInfos(props) {
 
                   <Row className="mt-3">
                     <Col>
-                      {images.map((i) => (
+                      {textInModification.images.map((i) => (
                         <ImageAdded
                           key={i.id}
                           removeImage={handleRemoveImage}
@@ -261,7 +240,7 @@ function TextInfos(props) {
                 <Card.Body className="p-4">
                   <Sentence addSentence={handleAddSentence} />
                   <hr />
-                  {sentences.map((s) => (
+                  {textInModification.phrases.map((s) => (
                     <SentenceAdded
                       key={s.id}
                       sentence={s}
@@ -277,55 +256,36 @@ function TextInfos(props) {
                 <Card.Body className="p-4">
                   <Question handleAddQuestion={handleAddQuestion} />
                   <hr />
-                  
-               {questions.map(q => <QuestionAdded key={q.id} question={q} questions={questions} setQuestions={setQuestions} handleRemoveQuestion={handleRemoveQuestion}/>)}
-                  
+
+                  {textInModification.questions.map((q) => (
+                    <QuestionAdded
+                      handleAddAnswerChoice={handleAddAnswerChoice}
+                      handleRemoveAnswerChoice={handleRemoveAnswerChoice}
+                      key={q.id}
+                      question={q}
+                      questions={questions}
+                      setQuestions={setQuestions}
+                      handleRemoveQuestion={handleRemoveQuestion}
+                      answerChoices={answerChoices}
+                      setAnswerChoice={setAnswerChoices}
+                    />
+                  ))}
                 </Card.Body>
               </Card>
-              {/* {connectedUser.editMode == true ? (<><Question
-                number="1"
-                question={connectedUser.textInUse.questions[0]}
-                handleChangeQuestion={handleChangeQuestion} /><Question
-                  number="2"
-                  question={connectedUser.textInUse.questions[1]}
-                  handleChangeQuestion={handleChangeQuestion} /><Question
-                  number="3"
-                  question={connectedUser.textInUse.questions[2]}
-                  handleChangeQuestion={handleChangeQuestion} /><Question
-                  number="4"
-                  question={connectedUser.textInUse.questions[3]}
-                  handleChangeQuestion={handleChangeQuestion} /><Question
-                  number="5"
-                  question={connectedUser.textInUse.questions[4]}
-                  handleChangeQuestion={handleChangeQuestion} /><Question
-                  number="6"
-                  question={connectedUser.textInUse.questions[5]}
-                  handleChangeQuestion={handleChangeQuestion} /></>): <><Question
-                  number="1"
-                  
-                  handleChangeQuestion={handleChangeQuestion} /><Question
-                    number="2"
-                    
-                    handleChangeQuestion={handleChangeQuestion} /><Question
-                    number="3"
-                    
-                    handleChangeQuestion={handleChangeQuestion} /><Question
-                    number="4"
-                   
-                    handleChangeQuestion={handleChangeQuestion} /><Question
-                    number="5"
-                   
-                    handleChangeQuestion={handleChangeQuestion} /><Question
-                    number="6"
-                   
-                    handleChangeQuestion={handleChangeQuestion} /></>} */}
-
               <Row className="text-end mb-5 mt-4">
-                <Col>
-                  <Button onClick={handleValidate} variant="primary">
-                    Valider
-                  </Button>
-                </Col>
+                {connectedUser.editMode == false ? (
+                  <Col>
+                    <Button onClick={handleValidate} variant="primary">
+                      Créer
+                    </Button>
+                  </Col>
+                ) : (
+                  <Col>
+                    <Button onClick={handleModify} variant="primary">
+                      Modifier
+                    </Button>
+                  </Col>
+                )}
               </Row>
             </Col>
           </Row>

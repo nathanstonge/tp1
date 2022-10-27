@@ -1,19 +1,13 @@
 import React, { useState } from "react";
-import { FaTrash, FaEdit, FaSave, FaLink } from "react-icons/fa";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Table,
-} from "react-bootstrap";
-import AnswerChoice from "./AnswerChoice";
+import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { editAnswerChoice, deleteAnswerChoice } from "/src/redux.jsx";
 
 function AnswerChoiceAdded(props) {
-  const [answerChoice, setAnswerChoice] = useState(props.answerChoice);
+  const dispatch = useDispatch();
 
+  const [answerChoice, setAnswerChoice] = useState(props.answerChoice);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setAnswerChoice((prevValue) => {
@@ -26,20 +20,27 @@ function AnswerChoiceAdded(props) {
   const handleEditSave = () => {
     setEditMode(!editMode);
     if (editMode == true) {
-      const answerChoices = props.answerChoices;
-      const index = answerChoices.findIndex((a) => a.id == answerChoice.id);
-      answerChoices[index] = answerChoice;
-      props.setAnswerChoices(answerChoices);
+      dispatch(
+        editAnswerChoice({
+          answerChoice: answerChoice,
+          question: props.question,
+        })
+      );
     }
   };
   const handleRemoveAnswerChoice = () => {
-    props.handleRemoveAnswerChoice(answerChoice.id);
+    dispatch(
+      deleteAnswerChoice({
+        answerChoice: answerChoice,
+        question: props.question,
+      })
+    );
   };
 
   return (
     <div>
       <Row>
-        <Col>
+        <Col xs={4}>
           {editMode ? (
             <Form.Control
               onChange={handleChange}
@@ -53,27 +54,29 @@ function AnswerChoiceAdded(props) {
             <p style={{ fontSize: "18px" }}>{answerChoice.text}</p>
           )}
         </Col>
-        <Col>
+        <Col xs={3}>
           {editMode ? (
             <Form.Control
+              value={answerChoice.audio}
               name="audio"
               onChange={handleChange}
               required
               className="mb-2"
-              type="file"
+              type="text"
             />
           ) : (
             <p style={{ fontSize: "18px" }}>{answerChoice.audio}</p>
           )}
         </Col>
-        <Col>
+        <Col xs={3}>
           {editMode ? (
             <Form.Control
+              value={answerChoice.image}
               name="image"
               onChange={handleChange}
               required
               className="mb-2"
-              type="file"
+              type="text"
             />
           ) : (
             <p style={{ fontSize: "18px" }}>{answerChoice.image}</p>
@@ -89,9 +92,7 @@ function AnswerChoiceAdded(props) {
             <FaTrash size={16} />
           </Button>
         </Col>
-        
       </Row>
-      
     </div>
   );
 }

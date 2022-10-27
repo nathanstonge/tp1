@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { FaPlus } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { addAnswerChoice } from "/src/redux.jsx";
 
 function AnswerChoice(props) {
-  // const textInputName = `text${props.number}`;
-  // const audioInputName = `audio${props.number}`;
-  // const imageInputName = `image${props.number}`;
   const [answerChoiceInfos, setAnswerChoiceInfos] = useState({
     text: "",
     audio: "",
     image: "",
+    questionId: props.question.id,
   });
-  // let _textInput, _audioInput, _imageInput;
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,8 +21,13 @@ function AnswerChoice(props) {
   };
 
   const handleAdd = () => {
-    props.handleAddAnswerChoice(answerChoiceInfos);
-    setAnswerChoiceInfos({ text: "", audio: "", image: "" });
+    dispatch(addAnswerChoice(answerChoiceInfos));
+    setAnswerChoiceInfos({
+      text: "",
+      audio: "",
+      image: "",
+      questionId: props.question.id,
+    });
   };
 
   return (
@@ -43,7 +48,8 @@ function AnswerChoice(props) {
         value={answerChoiceInfos.audio}
         name="audio"
         className="mb-2"
-        type="file"
+        placeholder="Entrez la source de l'audio"
+        type="text"
       />
       <Form.Label as="h6">Source image :</Form.Label>
       <Form.Control
@@ -51,7 +57,8 @@ function AnswerChoice(props) {
         value={answerChoiceInfos.image}
         name="image"
         className="mb-2"
-        type="file"
+        placeholder="Entrez la source de l'image"
+        type="text"
       />
       <Row className="mt-3">
         <Col className="text-center">

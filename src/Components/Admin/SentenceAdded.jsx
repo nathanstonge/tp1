@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import { FaTrash, FaEdit, FaSave } from "react-icons/fa";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Table,
-} from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { editSentence, removeSentence } from "/src/redux.jsx";
 
 function SentenceAdded(props) {
-    const sentenceCopy = props.sentence;
+  const sentenceCopy = props.sentence;
   const [sentence, setSentence] = useState(sentenceCopy);
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,27 +16,22 @@ function SentenceAdded(props) {
     });
   };
 
-
   const [editMode, setEditMode] = useState(false);
 
   const handleEditSave = () => {
     setEditMode(!editMode);
     if (editMode == true) {
-      const sentences = props.sentences;
-      const index = sentences.findIndex((s) => s.id == sentence.id);
-      sentences[index] = sentence;
-      props.setSentences(sentences);
-      
+      dispatch(editSentence(sentence));
     }
   };
   const handleRemoveSentence = () => {
-    props.removeSentence(props.sentence.id);
-}
+    dispatch(removeSentence(props.sentence.id));
+  };
 
   return (
     <div>
       <Row>
-        <Col>
+        <Col xs={5}>
           {editMode ? (
             <Form.Control
               onChange={handleChange}
@@ -55,15 +45,15 @@ function SentenceAdded(props) {
             <p style={{ fontSize: "18px" }}>{sentence.text}</p>
           )}
         </Col>
-        <Col>
+        <Col xs={5}>
           {editMode ? (
             <Form.Control
-           
-            name="audio"
+              name="audio"
               onChange={handleChange}
               required
               className="mb-2"
-              type="file"
+              type="text"
+              value={sentence.audio}
             />
           ) : (
             <p style={{ fontSize: "18px" }}>{sentence.audio}</p>

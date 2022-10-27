@@ -1,6 +1,6 @@
 import React from "react";
-import { FaHome, FaTimesCircle } from "react-icons/fa";
-import { Container, Card, Button, Row, Col, Form } from "react-bootstrap";
+import { FaTimesCircle } from "react-icons/fa";
+import { Container, Card, Button, Row, Col } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
 

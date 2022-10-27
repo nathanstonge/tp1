@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import Menu from "../../Components/Menu";
 import Texts from "../../Components/Texts";
 import NotFoundUser from "../NotFoundUser";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { v4 } from "uuid";
 
 function TextsClient(props) {
@@ -28,11 +28,9 @@ function TextsClient(props) {
         <>
           <Menu />
           <Container>
-            
-                {texts.map(t => <Texts key={v4()} connectedUser={connectedUser} text={t} />)}
-                
-               
-              
+            {texts.map((t) => (
+              <Texts key={v4()} connectedUser={connectedUser} text={t} />
+            ))}
           </Container>
         </>
       )}

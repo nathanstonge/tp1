@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 function Menu(props) {
   const connectedUser = useSelector((state) => state.sessionUser);
-  
+
   const disptach = useDispatch();
   let navigateTo = useNavigate();
 
@@ -18,8 +18,6 @@ function Menu(props) {
     disptach(disconnectUser());
     navigateTo("/");
   };
-  
-
 
   return (
     <div>
@@ -29,15 +27,25 @@ function Menu(props) {
             {" "}
             <b>Bienvenue</b> {connectedUser.prenom} {connectedUser.nom}{" "}
           </Navbar.Brand>
-          <Nav className="text-end" variant="pills" >
-          <Nav.Item>
-            {connectedUser.typeCompte == "Admin" ? (
-              <Nav.Link as={Link} to="/main-admin">Les textes</Nav.Link>
-            ) : (<Nav.Link as={Link} to="/main-client">Les textes</Nav.Link>)}
+          <Nav className="text-end" variant="pills">
+            <Nav.Item>
+              {connectedUser.typeCompte == "Admin" ? (
+                <Nav.Link as={Link} to="/main-admin">
+                  Les textes
+                </Nav.Link>
+              ) : (
+                <Nav.Link as={Link} to="/main-client">
+                  Les textes
+                </Nav.Link>
+              )}
             </Nav.Item>
             {connectedUser.typeCompte == "Admin" ? (
-              <Nav.Link as={Link} to="/stats">Statistiques</Nav.Link>
-            ) : (<></>)}
+              <Nav.Link as={Link} to="/stats">
+                Statistiques
+              </Nav.Link>
+            ) : (
+              <></>
+            )}
             <Nav.Item>
               <Nav.Link as={Link} to="/modify-account">
                 Modifier profil

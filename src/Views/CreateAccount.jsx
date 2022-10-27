@@ -23,7 +23,7 @@ function CreateAccount(props) {
       codeAccesAdmin: _codeAcces.value,
     };
     const adminCodeV = 2525;
-    let adminVerified;
+    let adminVerified=true;
     if (newUser.typeCompte === "Admin") {
         adminVerified = false;
         if (newUser.codeAccesAdmin === "") {
